@@ -1,4 +1,11 @@
-export default [
+const js = {
+  rules: {
+    "no-unused-vars": "warn",
+    "no-undef": "error"
+  }
+};
+
+module.exports = [
   {
     languageOptions: {
       ecmaVersion: 2021,
@@ -6,12 +13,10 @@ export default [
         require: "readonly",
         process: "readonly",
         console: "readonly",
-        __dirname: "readonly"
+        __dirname: "readonly",
+        module: "readonly"
       }
     },
-    rules: {
-      "no-unused-vars": "warn",
-      "no-undef": "error"
-    }
+    rules: js.rules
   }
 ];
