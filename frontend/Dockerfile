@@ -15,7 +15,7 @@ WORKDIR /app
 COPY --from=builder /build/node_modules ./node_modules
 COPY --chown=appuser:appgroup . .
 
-RUN rm -f .env *.env
+RUN rm -f .env
 
 USER appuser
 

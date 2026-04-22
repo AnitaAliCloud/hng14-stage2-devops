@@ -3,7 +3,7 @@ FROM python:3.11-slim AS builder
 WORKDIR /build
 
 COPY requirements.txt .
-RUN pip install --upgrade pip && \
+RUN pip install --no-cache-dir --upgrade pip && \
     pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
 FROM python:3.11-slim
@@ -14,11 +14,11 @@ RUN addgroup --system appgroup && \
 WORKDIR /app
 
 COPY --from=builder /wheels /wheels
-RUN pip install --no-cache-dir --find-links=/wheels /wheels/*
+RUN pip install --no-cache-dir --no-index --find-links=/wheels /wheels/*.whl
 
 COPY --chown=appuser:appgroup . .
 
-RUN rm -f .env *.env
+RUN rm -f .env
 
 USER appuser
 
