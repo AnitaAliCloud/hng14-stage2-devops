@@ -12,11 +12,13 @@ r = redis.Redis(
     decode_responses=True
 )
 
+
 def process_job(job_id):
     logger.info(f"Processing job {job_id}")
     time.sleep(2)
     r.hset(f"job:{job_id}", "status", "completed")
     logger.info(f"Done: {job_id}")
+
 
 while True:
     try:
