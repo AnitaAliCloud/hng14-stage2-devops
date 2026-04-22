@@ -66,4 +66,3 @@ def test_get_job_returns_correct_job_id():
         mock_redis.hget.return_value = "completed"
         response = client.get("/jobs/test-abc")
         assert response.json()["job_id"] == "test-abc"
-
