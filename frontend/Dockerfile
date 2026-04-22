@@ -1,11 +1,11 @@
-FROM node:20-slim AS builder
+FROM node:20.19.1-slim AS builder
 
 WORKDIR /build
 
 COPY package*.json ./
 RUN npm install --omit=dev
 
-FROM node:20-slim
+FROM node:20.19.1-slim
 
 RUN groupadd --system appgroup && \
     useradd --system --gid appgroup appuser

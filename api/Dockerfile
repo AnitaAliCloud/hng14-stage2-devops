@@ -1,4 +1,4 @@
-FROM python:3.11-slim AS builder
+FROM python:3.11.9-slim-bookworm AS builder
 
 WORKDIR /build
 
@@ -6,7 +6,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir pip==24.0 && \
     pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
     
-FROM python:3.11-slim
+FROM python:3.11.9-slim-bookworm
 
 RUN addgroup --system appgroup && \
     adduser --system --ingroup appgroup appuser
