@@ -198,6 +198,16 @@ jobs:
             sleep 5
           done
 
+      - name: Debug logs
+        if: always()
+        run: |
+          echo "=== FRONTEND LOGS ==="
+          docker compose logs frontend
+          echo "=== API LOGS ==="
+          docker compose logs api
+          echo "=== WORKER LOGS ==="
+          docker compose logs worker
+          
       - name: Submit job and poll until completed
         run: |
           set -e
