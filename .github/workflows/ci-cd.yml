@@ -207,7 +207,7 @@ jobs:
           docker compose logs api
           echo "=== WORKER LOGS ==="
           docker compose logs worker
-          
+
       - name: Submit job and poll until completed
         run: |
           set -e
@@ -251,7 +251,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check deploy secrets
+        id: check-secrets
+        run: |
+          if [ -z "${{ secrets.DEPLOY_HOST }}" ]; then
+            echo "No deploy secrets configured, skipping deploy"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Configure SSH
+        if: steps.check-secrets.outputs.skip == 'false'
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
@@ -259,6 +270,7 @@ jobs:
           ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Deploy to server
+        if: steps.check-secrets.outputs.skip == 'false'
         run: |
           ssh "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" bash -s << 'ENDSSH'
             set -e
@@ -277,3 +289,7 @@ jobs:
             docker compose up -d --no-deps frontend
             echo "Deploy complete!"
           ENDSSH
+
+      - name: Skip deploy
+        if: steps.check-secrets.outputs.skip == 'true'
+        run: echo "Deploy skipped — no server secrets configured"
